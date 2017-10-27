@@ -1,0 +1,200 @@
+1.a.
+    int main()
+    {
+        int arr[3] = { 5, 10, 15 };
+        int* ptr = arr;
+
+        *ptr = 10;          // set arr[0] to 10
+        *(ptr + 1) = 20;      // set arr[1] to 20
+        ptr += 2;
+        ptr[0] = 30;        // set arr[2] to 30
+
+        while (ptr >= arr)
+        {
+	    cout << *ptr << endl;    // print values
+	    ptr--;
+        }
+    }
+
+1.b.
+	The problem with this program is that the pointer ptr is not initialized when it's called to cout. 
+	The function can be fixed by by passing by reference the 3rd element in the function. 
+	This way, ptr points to the maximum item found by the function and the output makes sense.
+
+    void findMax(int arr[], int n, int*& pToMax)
+    {
+        if (n <= 0) 
+            return;      // no items, no maximum!
+    
+        pToMax = arr;
+
+        for (int i = 1; i < n; i++)
+        {
+            if (arr[i] > *pToMax)
+                 pToMax = arr + i;
+        }
+    }  
+
+
+    int main()
+    {
+        int nums[4] = { 5, 3, 15, 6 };
+        int* ptr;
+
+        findMax(nums, 4, ptr);
+        cout << "The maximum is at address " << ptr << endl;
+        cout << "It's at position " << ptr - nums << endl;
+        cout << "Its value is " << *ptr << endl;
+    }
+
+1.c.
+	The problem with this program is that ptr doesn't point to anything. 
+	We can fix this problem by simply changing ptr from a pointer to an integer. 
+	Then we can pass by reference ptr to the function.
+
+    void computeCube(int n, int* ncubed)
+    {
+        *ncubed = n * n * n;
+    }
+
+    int main()
+    {
+        int ptr;
+        computeCube(5, &ptr);
+        cout << "Five cubed is " << ptr << endl;
+    }
+
+1.d.
+	The problem this function has is that the function uses "str1" and "str2" where it should be "*str1" and "*str2." 
+	We need to compare the objects that str1 and str2 point to, so we use *str1 and *str2 when checking if they are equal to 0 or equal to each other.
+
+    bool strequal(const char str1[],const char str2[])
+    {
+        while (*str1 != 0  &&  *str2 != 0)
+        {
+            if (*str1 != *str2)  // compare corresponding characters
+                return false;
+            str1++;            // advance to the next character
+            str2++;
+        }
+        return *str1 == *str2;   // both ended at same time?
+    }
+
+    int main()
+    {
+        char a[15] = "pointy";
+        char b[15] = "pointy";
+
+        if (strequal(a,b))
+            cout << "They're the same!\n";
+		else cout << "They're not!\n";
+    }
+
+1.e.
+	The problem with the program is that ptr in the main function is a pointer. 
+	The function getPtrToArray is also a pointer, however it returns anArray, which is an array of integers. 
+	This causes the program to give unexpected results.
+
+2.a.
+	double* cat;
+
+2.b.
+	double mouse[5];
+
+2.c.
+	cat = &mouse[4];
+
+2.d.
+	*cat = 17;
+
+2.e.
+	*(mouse + 3) = 23;
+
+2.f.
+	cat -= 3;
+
+2.g.
+	cat[1] = 54;
+
+2.h.
+	cat[0] = 25;
+
+2.i.
+	bool b = (*cat == cat[1]);
+
+2.j.
+	bool d = (cat == mouse);
+
+3.a.
+    double mean(const double* scores, int numScores)
+    {
+        const double* ptr = scores;
+        double tot = 0;
+		for(int k = 0; ptr + k != scores + numScores; k++)
+            tot += *(ptr + k);
+        return tot/numScores;
+    }
+
+3.b.
+    const char* findTheChar(const char* str, char chr)
+    {
+        for (int k = 0; *(str + k) != 0; k++)
+            if (*(str + k) == chr)
+                return &*(str + k);
+
+        return nullptr;
+    }
+
+3.c.
+    const char* findTheChar(const char* str, char chr)
+    {
+        while(*str != 0)
+	{
+            if (*str == chr)
+                return &*str;
+	    str++;
+	}
+
+        return nullptr;
+    }
+
+4.
+
+    int main()
+    {
+        int array[6] = { 5, 3, 4, 17, 22, 19 };
+
+        int* ptr = maxwell(array, &array[2]);	//ptr gets assigned &array[0] because 5 > 4
+        *ptr = -1;				//array[0] becomes -1
+        ptr += 2;				//ptr is assigned &array[2]
+        ptr[1] = 9;				//array[3] becomes 9
+        *(array+1) = 79;			//array[1] becomes 79
+						//the array at this point is { -1, 79, 4, 9, 22, 19 }
+
+        cout << &array[5] - ptr << endl;	//&array[5] - &array[2] which is just 5 - 2 = 3
+						//output is 3
+
+        swap1(&array[0], &array[1]);		//the pointers are swapped in this function, which does nothing to the main function
+        swap2(array, &array[2]);		//the array[0] and array[2] swap values
+						//array[0] becomes 4 and array[2] becomes -1
+						//the array is { 4, 79, -1, 9, 22, 19 }
+
+        for (int i = 0; i < 6; i++)
+            cout << array[i] << endl;		//the new array is displayed
+    } 
+
+5. 
+    void removeS(char* message)
+	{
+		char* shift = message;
+		for(;*shift != 0; shift++)
+		{
+			if (*shift == 's' || *shift == 'S')
+			{
+				for(; *shift != 0; shift++)
+					*shift = *(shift + 1);
+				shift = message;
+			}
+		}
+		
+	}
